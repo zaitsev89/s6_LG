@@ -10,6 +10,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
+from langgraph.types import interrupt
 from prompts import SYSTEM_PROMPT
 from typing_extensions import TypedDict
 
@@ -59,7 +60,14 @@ def internet_search(question: str) -> dict | str:
     return answer
 
 
-tools = [internet_search]
+@tool
+def human_assistance(query: str) -> str:
+    """Request assistance from a human."""
+    human_response = interrupt({"query": query})
+    return human_response["data"]
+
+
+tools = [internet_search, human_assistance]
 
 
 # ===== NODE DEFINITIONS =====
