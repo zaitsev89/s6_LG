@@ -13,3 +13,22 @@ requiredFiles = [".replit", "replit.nix"]
 [deployment]
 run = ["python3", "main.py"]
 deploymentTarget = "cloudrun"
+
+[workflows]
+runButton = "Run Graph Tools"
+
+[[workflows.workflow]]
+name = "Run LangGraph"
+author = 40172425
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python 1_graph_basic.py"
+
+[[workflows.workflow]]
+name = "Run Graph Tools"
+author = 40172425
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python 2_graph_tools.py"
