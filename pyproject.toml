@@ -11,4 +11,5 @@ dependencies = [
     "langgraph>=0.3.2",
     "tarsafe>=0.0.5",
     "typing-extensions>=4.12.2",
+    "openai>=1.0.0",
 ]
