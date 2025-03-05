@@ -97,7 +97,12 @@ def stream_graph_updates(graph, user_input: str):
             for event in events:
                 if "messages" in event:
                     event["messages"][-1].pretty_print()
-
+        try:
+            _snapshot = graph.get_state(config)
+            pass
+        except Exception:
+            pass
+    
 
 def main():
     print("Script Runner Utility")
