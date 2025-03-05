@@ -12,4 +12,5 @@ dependencies = [
     "tarsafe>=0.0.5",
     "typing-extensions>=4.12.2",
     "openai>=1.0.0",
+    "python-dotenv>=1.0.1",
 ]
