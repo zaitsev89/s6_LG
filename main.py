@@ -97,11 +97,6 @@ def stream_graph_updates(graph, user_input: str):
             for event in events:
                 if "messages" in event:
                     event["messages"][-1].pretty_print()
-        try:
-            snapshot = graph.get_state(config)
-            snapshot.pretty_print()
-        except Exception:
-            pass
 
 
 def main():
