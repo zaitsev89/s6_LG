@@ -20,12 +20,13 @@ class State(TypedDict):
 # ===== NODE DEFINITIONS =====
 def call_model_node(state: State):
     system_message = SYSTEM_PROMPT.format(
-        mood="neutral", system_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    )
+        mood="neutral",
+        system_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    message = llm.invoke(
-        [{"role": "system", "content": system_message}, *state["messages"]]
-    )
+    message = llm.invoke([{
+        "role": "system",
+        "content": system_message
+    }, *state["messages"]])
 
     return {"messages": [message]}
 
