@@ -69,13 +69,7 @@ def stream_graph_updates(graph, user_input: str):
 
     config = {"configurable": {"thread_id": "1"}}
     events = graph.stream(
-        {
-            "messages": [{
-                "role": "user",
-                "content": user_input
-            }],
-            "mood": "neutral"
-        },
+        {"messages": [{"role": "user", "content": user_input}], "mood": "neutral"},
         config,
         stream_mode="values",
     )
@@ -83,10 +77,11 @@ def stream_graph_updates(graph, user_input: str):
     for event in events:
         event["messages"][-1].pretty_print()
         # Check if the message has tool calls and needs human assistance
-        if (hasattr(event["messages"][-1], "tool_calls")
-                and event["messages"][-1].tool_calls
-                and event["messages"][-1].tool_calls[0].get("name")
-                == "human_assistance"):
+        if (
+            hasattr(event["messages"][-1], "tool_calls")
+            and event["messages"][-1].tool_calls
+            and event["messages"][-1].tool_calls[0].get("name") == "human_assistance"
+        ):
             print("Human assistance needed!")
             human_response = input("Human: ")
             if human_response.lower() in ["quit", "exit", "q"]:
@@ -102,7 +97,7 @@ def stream_graph_updates(graph, user_input: str):
             pass
         except Exception:
             pass
-    
+
 
 def main():
     print("Script Runner Utility")
@@ -118,49 +113,50 @@ def main():
         print(f"No Python scripts found in {current_dir}")
         return
 
-    print("\nAvailable scripts:")
-    # Sort the keys to display scripts in numerical order
-    sorted_keys = sorted(available_scripts.keys())
-    for key in sorted_keys:
-        script = available_scripts[key]
-        script_name = os.path.splitext(script)[0]  # Remove .py extension
-        print(f"{key}. {script_name}")
+    while True:
+        print("\nAvailable scripts:")
+        # Sort the keys to display scripts in numerical order
+        sorted_keys = sorted(available_scripts.keys())
+        for key in sorted_keys:
+            script = available_scripts[key]
+            script_name = os.path.splitext(script)[0]  # Remove .py extension
+            print(f"{key}. {script_name}")
 
-    # Get user input
-    choice = input("\nEnter script number, full path, or 'q' to quit: ")
-    if choice.lower() == "q":
-        exit()
-
-    script_key = int(choice)
-    if script_key in available_scripts:
-        script_path = available_scripts[script_key]
-        graph = import_graph(script_path)
-
-        if graph is None:
-            print(f"No graph found in {script_path}")
+        # Get user input
+        choice = input("\nEnter script number, full path, or 'q' to quit: ")
+        if choice.lower() == "q":
             exit()
 
-        # ===== VISUALIZATION (OPTIONAL) =====
-        try:
-            os.makedirs("./graphs", exist_ok=True)
-            with open(f"./graphs/{script_path}.png", "wb") as f:
-                f.write(graph.get_graph(xray=True).draw_mermaid_png())
-        except Exception:
-            # This requires some extra dependencies and is optional
-            pass
+        script_key = int(choice)
+        if script_key in available_scripts:
+            script_path = available_scripts[script_key]
+            graph = import_graph(script_path)
 
-        while True:
-            user_input = input(
-                "\n\n\n\n================================== User Input ==================================\n\nUser: "
-            )
-            if user_input.lower() in ["quit", "exit", "q"]:
-                print("Goodbye!")
+            if graph is None:
+                print(f"No graph found in {script_path}")
                 exit()
 
-            stream_graph_updates(graph, user_input)
+            # ===== VISUALIZATION (OPTIONAL) =====
+            try:
+                os.makedirs("./graphs", exist_ok=True)
+                with open(f"./graphs/{script_path}.png", "wb") as f:
+                    f.write(graph.get_graph(xray=True).draw_mermaid_png())
+            except Exception:
+                # This requires some extra dependencies and is optional
+                pass
 
-    else:
-        print(f"No script found with number {script_key}")
+            while True:
+                user_input = input(
+                    "\n\n\n\n================================== User Input ==================================\n\nUser: "
+                )
+                if user_input.lower() in ["quit", "exit", "q"]:
+                    print("Goodbye!")
+                    break
+
+                stream_graph_updates(graph, user_input)
+
+        else:
+            print(f"No script found with number {script_key}")
 
 
 if __name__ == "__main__":

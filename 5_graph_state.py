@@ -1,10 +1,8 @@
 # ===== IMPORTS =====
 from datetime import datetime
 from typing import Annotated
-import os
-from dotenv import load_dotenv
 
-from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain_community.chat_models import ChatPerplexity
 from langchain_core.messages import ToolMessage
 from langchain_core.prompts import ChatPromptTemplate
@@ -17,14 +15,8 @@ from langgraph.types import Command, interrupt
 from prompts import SYSTEM_PROMPT
 from typing_extensions import TypedDict
 
-# Load environment variables
-load_dotenv()
-
 # ===== LLM SETUP =====
-llm = ChatOpenAI(
-    model="gpt-4-turbo",
-    api_key=os.getenv("OPENAI_API_KEY")
-)
+llm = ChatAnthropic(model="claude-3-5-sonnet-20240620")
 
 # ===== MEMORY =====
 memory = MemorySaver()
@@ -51,7 +43,6 @@ def internet_search(question: str) -> dict | str:
     perplexity_chat_model_sonar = ChatPerplexity(
         model="sonar",
         temperature=0,
-        api_key=os.getenv("PERPLEXITY_API_KEY")
     )
 
     # Define prompt for Perplexity
